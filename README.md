@@ -4,12 +4,7 @@ A 3D horror exploration game built with Three.js and Cannon-es physics engine. U
 
 ## Story
 
-The Factory of Plex was a manufacturing facility where toys were brought to life using a magical book. Two founders - Plex and Carlos - disagreed on how to treat these sentient beings. Plex pushed them to work relentlessly for profit, while Carlos showed compassion for their wellbeing.
-
-After years of overwork and torment, the toys began to transform into grotesque deformed creatures. The facility was evacuated as these beings became violent and uncontrollable. Now, 25 years later, an old manager has returned to salvage the machinery... but the deformed still lurk in the shadows.
-
-Your mission: Collect 8 lore items scattered throughout the factory to piece together what really happened.
-
+The Factory of Plex was a manufacturing facility where toys were brought to life using a magical book. Two founders - Plex and Carlos - disagreed on how to treat these sentient beings.
 ## How to Play
 
 ### Web Version (Easiest)

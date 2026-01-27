@@ -18,14 +18,14 @@ Simply open `dist/game.html` in your web browser - no installation needed!
 - **R** - Restart after death
 
 ## Lore Items to Collect
-1. **Letter from Carlos to Plex** - Expressing concern for the toys
-2. **Letter from Plex to Carlos** - Cold dismissal of their suffering
-3. **Toy Diary Entry** - A toy's perspective on the transformation
-4. **Security Tape Transcript** - Records of the evacuation
-5. **Internal Report** - Scientific documentation of the metamorphosis
-6. **Evacuation Log** - Final chaotic moments
-7. **Scratched Message on Wall** - Desperate pleas for help
-8. **Manager's Note** - Why you're back in this place
+1. **Letter from Carlos to Plex** 
+2. **Letter from Plex to Carlos**
+3. **Toy Diary Entry**
+4. **Security Tape Transcript**
+5. **Internal Report**
+6. **Evacuation Log**
+7. **Scratched Message on Wall** 
+8. **Manager's Note**
 
 ## The Deformed
 

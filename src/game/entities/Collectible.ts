@@ -1,41 +1,47 @@
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es'
 
+export interface CollectibleData {
+  id: string
+  name: string
+  description: string
+  isLore: boolean // true for lore items, false for craftable items
+  loreContent?: string // Only for lore items
+}
+
 export class Collectible {
   public mesh: THREE.Group
   public collected = false
   private body: CANNON.Body
   private rotationSpeed = Math.random() * 0.03 + 0.01
+  public data: CollectibleData
 
   constructor(
     scene: THREE.Scene,
     world: CANNON.World,
     position: [number, number, number],
-    public type: string,
-    public title: string,
-    public content: string,
-    private onCollect: () => void
+    data: CollectibleData,
+    private onCollect: (item: CollectibleData) => void
   ) {
+    this.data = data
     this.mesh = new THREE.Group()
     this.mesh.position.set(position[0], position[1], position[2])
 
-    // Create visual representation with glow
+    // Create visual representation with glow - color based on type
     let geometry: THREE.BufferGeometry
+    const color = data.isLore ? 0x00ff00 : 0xffaa00 // Green for lore, orange for crafting items
     const material = new THREE.MeshStandardMaterial({
-      color: 0x00ff00,
-      emissive: 0x00aa00,
+      color: color,
+      emissive: color,
       emissiveIntensity: 0.8,
       metalness: 0.6,
       roughness: 0.2
     })
 
-    if (type.startsWith('letter')) {
+    if (data.isLore) {
       geometry = new THREE.BoxGeometry(0.6, 0.8, 0.15)
-    } else if (type.startsWith('tape')) {
-      geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.3, 32)
-    } else if (type.startsWith('report')) {
-      geometry = new THREE.BoxGeometry(0.7, 0.9, 0.1)
     } else {
+      // Crafting items have different shapes
       geometry = new THREE.OctahedronGeometry(0.4, 2)
     }
 
@@ -46,8 +52,8 @@ export class Collectible {
     // Add glowing aura
     const auraGeometry = new THREE.SphereGeometry(0.8, 16, 16)
     const auraMaterial = new THREE.MeshStandardMaterial({
-      color: 0x00ff00,
-      emissive: 0x00ff00,
+      color: color,
+      emissive: color,
       emissiveIntensity: 0.3,
       transparent: true,
       opacity: 0.2,
@@ -58,7 +64,7 @@ export class Collectible {
     this.mesh.add(aura)
 
     // Add point light
-    const light = new THREE.PointLight(0x00ff00, 1.5, 15)
+    const light = new THREE.PointLight(color, 1.5, 15)
     light.castShadow = true
     this.mesh.add(light)
 
@@ -79,7 +85,7 @@ export class Collectible {
     if (!this.collected) {
       this.collected = true
       this.mesh.visible = false
-      this.onCollect()
+      this.onCollect(this.data)
     }
   }
 

@@ -19,7 +19,7 @@ Simply open `dist/game.html` in your web browser - no installation needed!
 - **W/A/S/D** - Move around the factory
 - **Mouse** - Look around (click in game to enable mouse lock)
 - **E** - Open/Close inventory
-- **Click Inventory Items** - Read lore entries
+- **Click Inventory Items** - Read lore entries or view items
 - **R** - Restart after death
 
 ## Lore Items to Collect

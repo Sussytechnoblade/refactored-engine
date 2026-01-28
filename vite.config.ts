@@ -2,14 +2,16 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  root: 'public',
+  // Serve from project root so /src imports resolve normally during dev
+  root: '.',
   server: {
     port: 8000,
     host: true,
     strictPort: true,
-    open: true,
+    // open the game HTML directly
+    open: '/public/game.html',
     fs: {
-      // Allow serving files from project root so imports like ../src/main.ts work
+      // still allow project root explicitly
       allow: [resolve(__dirname)]
     }
   },

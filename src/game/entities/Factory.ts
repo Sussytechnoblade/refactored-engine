@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export class Factory {
   public mesh: THREE.Group
@@ -52,6 +53,9 @@ export class Factory {
     this.addMachinery()
     this.addWalls()
     this.addDecor()
+
+    // If an external factory map exists, replace procedural factory with it
+    this.loadFactoryModel(scene, world)
   }
 
   private addPipes(): void {
@@ -168,6 +172,56 @@ export class Factory {
       decor.castShadow = true
       decor.receiveShadow = true
       this.mesh.add(decor)
+    })
+  }
+
+  private loadFactoryModel(scene: THREE.Scene, world: CANNON.World): void {
+    const loader = new GLTFLoader()
+    const path = 'models/factory/abandoned-factory.glb'
+    loader.load(path, (gltf) => {
+      // Replace procedural geometry with the loaded model
+      this.mesh.clear()
+      const model = gltf.scene
+      model.traverse((node) => {
+        if ((node as THREE.Mesh).isMesh) {
+          const mesh = node as THREE.Mesh
+          mesh.castShadow = true
+          mesh.receiveShadow = true
+        }
+      })
+      this.mesh.add(model)
+
+      // Add simple static colliders approximated by mesh bounding boxes
+      model.updateMatrixWorld(true)
+      model.traverse((node) => {
+        if ((node as THREE.Mesh).isMesh && node.geometry) {
+          const mesh = node as THREE.Mesh
+          mesh.geometry.computeBoundingBox()
+          const bbox = mesh.geometry.boundingBox!
+          const size = new THREE.Vector3()
+          bbox.getSize(size)
+
+          // account for world scale
+          const worldScale = new THREE.Vector3()
+          mesh.getWorldScale(worldScale)
+          size.multiply(worldScale)
+
+          if (size.x <= 0 || size.y <= 0 || size.z <= 0) return
+
+          const halfExtents = new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2)
+          const box = new CANNON.Box(halfExtents)
+
+          const pos = new THREE.Vector3()
+          mesh.getWorldPosition(pos)
+
+          const body = new CANNON.Body({ mass: 0 })
+          body.addShape(box)
+          body.position.set(pos.x, pos.y, pos.z)
+          world.addBody(body)
+        }
+      })
+    }, undefined, (err) => {
+      console.error('Error loading factory model:', err)
     })
   }
 }

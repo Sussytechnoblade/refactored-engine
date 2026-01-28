@@ -204,63 +204,83 @@ export class GameEngine {
     const collectiblesData = [
       {
         position: [10, 1, 15],
-        type: 'letter_carlos_1',
-        title: 'Letter from Carlos to Plex',
-        content: 'Dear Plex,\n\nI am deeply concerned about what we are doing. These toys... they think, they feel, they dream. I see it in their eyes. Just because we brought them to life doesn\'t give us the right to treat them as mere machines.\n\nWe must reduce their working hours and provide them proper rest. They are suffering.\n\n- Carlos'
+        id: 'letter_carlos_1',
+        name: 'Letter from Carlos to Plex',
+        description: 'A concerned letter about toy welfare',
+        isLore: true,
+        loreContent: 'Dear Plex,\n\nI am deeply concerned about what we are doing. These toys... they think, they feel, they dream. I see it in their eyes. Just because we brought them to life doesn\'t give us the right to treat them as mere machines.\n\nWe must reduce their working hours and provide them proper rest. They are suffering.\n\n- Carlos'
       },
       {
         position: [20, 1, 5],
-        type: 'letter_plex_1',
-        title: 'Letter from Plex to Carlos',
-        content: 'Carlos,\n\nThey are TOYS. Yes, they can think, but they exist for production. Sentiment is weakness. We have quotas to meet and profits to maximize.\n\nYour compassion is costing us millions. Either increase production or stop wasting my time.\n\n- Plex'
+        id: 'letter_plex_1',
+        name: 'Letter from Plex to Carlos',
+        description: 'A ruthless response about production',
+        isLore: true,
+        loreContent: 'Carlos,\n\nThey are TOYS. Yes, they can think, but they exist for production. Sentiment is weakness. We have quotas to meet and profits to maximize.\n\nYour compassion is costing us millions. Either increase production or stop wasting my time.\n\n- Plex'
       },
       {
         position: [5, 1, 20],
-        type: 'letter_toy_1',
-        title: 'Diary Entry - Toy #4472',
-        content: 'My "birthday" was two weeks ago. That\'s when I came alive. I remember the glow of the magic book as my consciousness sparked into existence.\n\nI was happy at first. I had friends - other toys like me. But now... we work so much. My joints hurt. The others are starting to change. Their eyes go empty. What is happening to us?'
+        id: 'letter_toy_1',
+        name: 'Diary Entry - Toy #4472',
+        description: 'A toy\'s account of consciousness and suffering',
+        isLore: true,
+        loreContent: 'My "birthday" was two weeks ago. That\'s when I came alive. I remember the glow of the magic book as my consciousness sparked into existence.\n\nI was happy at first. I had friends - other toys like me. But now... we work so much. My joints hurt. The others are starting to change. Their eyes go empty. What is happening to us?'
       },
       {
         position: [15, 1, 25],
-        type: 'tape_transcript_1',
-        title: 'Security Tape Transcript - Day 47',
-        content: '[AUDIO LOG - HEAVILY CORRUPTED]\n\n...workers report strange behavior in Sector 7. The toys are... fused together? Some have multiple limbs. Others are immobile.\n\nDoctor recommends immediate evacuation. Safety protocols violated. Unknown metamorphosis occurring.\n\nDirector Plex refuses to shutdown operations...'
+        id: 'tape_transcript_1',
+        name: 'Security Tape Transcript - Day 47',
+        description: 'Corrupted audio log of anomalous behavior',
+        isLore: true,
+        loreContent: '[AUDIO LOG - HEAVILY CORRUPTED]\n\n...workers report strange behavior in Sector 7. The toys are... fused together? Some have multiple limbs. Others are immobile.\n\nDoctor recommends immediate evacuation. Safety protocols violated. Unknown metamorphosis occurring.\n\nDirector Plex refuses to shutdown operations...'
       },
       {
         position: [0, 1, 10],
-        type: 'letter_toy_2',
-        title: 'Scratched Message on Wall',
-        content: 'HELP US\nHELP US\nHELP US\n\nWe are not what we were\nWe hunger\nWe are in pain\nWe want to be free\n\nThey made us\nWhy did they make us if they would do this\n\n...please...'
+        id: 'letter_toy_2',
+        name: 'Scratched Message on Wall',
+        description: 'Desperate pleas from suffering entities',
+        isLore: true,
+        loreContent: 'HELP US\nHELP US\nHELP US\n\nWe are not what we were\nWe hunger\nWe are in pain\nWe want to be free\n\nThey made us\nWhy did they make us if they would do this\n\n...please...'
       },
       {
         position: [25, 1, 15],
-        type: 'report_carlos',
-        title: 'Internal Report - Carlos Martinez',
-        content: 'URGENT: Biological Anomaly Report\n\nThe toys are experiencing rapid cellular degradation combined with neural integration. They are becoming something else. Something unified. Something hungry.\n\nI am requesting immediate evacuation and containment. This situation has spiraled beyond our control.\n\nPlex continues to deny the severity. We may have created something we cannot control.'
+        id: 'report_carlos',
+        name: 'Internal Report - Carlos Martinez',
+        description: 'Analysis of biological anomalies',
+        isLore: true,
+        loreContent: 'URGENT: Biological Anomaly Report\n\nThe toys are experiencing rapid cellular degradation combined with neural integration. They are becoming something else. Something unified. Something hungry.\n\nI am requesting immediate evacuation and containment. This situation has spiraled beyond our control.\n\nPlex continues to deny the severity. We may have created something we cannot control.'
       },
       {
         position: [10, 1, 0],
-        type: 'tape_transcript_2',
-        title: 'Evacuation Log - Final Entry',
-        content: '[RECORDING CORRUPTED AND DISTORTED]\n\n...they are breaking through the doors. Multiple entities. Possibly a single organism distributed across a dozen forms. Witnesses report extreme deformity and aggressive behavior.\n\nEVACUATE IMMEDIATELY\n\n[Sound of screaming - RECORDING ENDS]'
+        id: 'tape_transcript_2',
+        name: 'Evacuation Log - Final Entry',
+        description: 'The last recorded moments before disaster',
+        isLore: true,
+        loreContent: '[RECORDING CORRUPTED AND DISTORTED]\n\n...they are breaking through the doors. Multiple entities. Possibly a single organism distributed across a dozen forms. Witnesses report extreme deformity and aggressive behavior.\n\nEVACUATE IMMEDIATELY\n\n[Sound of screaming - RECORDING ENDS]'
       },
       {
         position: [5, 1, 5],
-        type: 'note_manager',
-        title: 'Note from Old Manager - 25 years later',
-        content: 'I came back to salvage what I could. The machines, the trains... they need to be moved. Maybe they can have a second purpose.\n\nBut the things here... I see them sometimes. In the shadows. The deformed.\n\nI pray they won\'t notice me.'
+        id: 'note_manager',
+        name: 'Note from Old Manager - 25 years later',
+        description: 'Reflections after the catastrophe',
+        isLore: true,
+        loreContent: 'I came back to salvage what I could. The machines, the trains... they need to be moved. Maybe they can have a second purpose.\n\nBut the things here... I see them sometimes. In the shadows. The deformed.\n\nI pray they won\'t notice me.'
       }
     ]
 
-    collectiblesData.forEach((data, index) => {
+    collectiblesData.forEach((data) => {
       const collectible = new Collectible(
         this.scene,
         this.world,
         data.position as [number, number, number],
-        data.type,
-        data.title,
-        data.content,
-        () => this.showLoreEntry(data.title, data.content)
+        {
+          id: data.id,
+          name: data.name,
+          description: data.description,
+          isLore: data.isLore,
+          loreContent: data.loreContent
+        },
+        () => this.showLoreEntry(data.name, data.loreContent || '')
       )
       this.collectibles.push(collectible)
     })

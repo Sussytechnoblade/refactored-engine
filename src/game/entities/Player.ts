@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export class Player {
   public mesh: THREE.Group
@@ -8,6 +9,7 @@ export class Player {
   private velocity = new THREE.Vector3()
   private yaw = 0
   private pitch = 0
+  private modelLoaded = false
 
   constructor(
     scene: THREE.Scene,
@@ -17,6 +19,9 @@ export class Player {
     // Create visual mesh
     this.mesh = new THREE.Group()
     this.mesh.position.set(0, 2, 0)
+
+    // Load custom player model
+    this.loadPlayerModel(scene)
 
     // Create physics body - using a capsule shape (sphere for now)
     const shape = new CANNON.Sphere(0.5)
@@ -64,5 +69,24 @@ export class Player {
 
     // Update mesh position from body
     this.mesh.position.copy(this.body.position as any)
+  }
+
+  private loadPlayerModel(scene: THREE.Scene): void {
+    const loader = new GLTFLoader()
+    loader.load('models/Player.glb', (gltf) => {
+      const model = gltf.scene
+      model.scale.set(1, 1, 1)
+      model.traverse((node) => {
+        if ((node as THREE.Mesh).isMesh) {
+          const mesh = node as THREE.Mesh
+          mesh.castShadow = true
+          mesh.receiveShadow = true
+        }
+      })
+      this.mesh.add(model)
+      this.modelLoaded = true
+    }, undefined, (error) => {
+      console.error('Error loading player model:', error)
+    })
   }
 }

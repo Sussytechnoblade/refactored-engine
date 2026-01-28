@@ -4,6 +4,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export class Factory {
   public mesh: THREE.Group
+  public loaded = false
+  public center = new THREE.Vector3()
+  public size = new THREE.Vector3()
 
   constructor(scene: THREE.Scene, world: CANNON.World) {
     this.mesh = new THREE.Group()
@@ -189,6 +192,48 @@ export class Factory {
           mesh.receiveShadow = true
         }
       })
+
+      // Ensure model is up-to-scale and centered so player will see it
+      model.updateMatrixWorld(true)
+      const box = new THREE.Box3().setFromObject(model)
+      const size = box.getSize(new THREE.Vector3())
+      const center = box.getCenter(new THREE.Vector3())
+      console.log('Loaded factory model bbox:', box, 'size:', size)
+
+      // Auto-scale if model is huge
+      const maxDim = Math.max(size.x, size.y, size.z)
+      if (maxDim > 100) {
+        const scale = 60 / maxDim
+        model.scale.multiplyScalar(scale)
+        model.updateMatrixWorld(true)
+        box.setFromObject(model)
+        box.getSize(size)
+        box.getCenter(center)
+        console.log('Scaled factory model to', scale, 'new size:', size)
+      }
+
+      // Reposition so the model base sits at y=0 and it's centered on origin
+      model.position.x -= center.x
+      model.position.z -= center.z
+      model.position.y -= box.min.y
+      model.updateMatrixWorld(true)
+
+      // Save metadata so external systems (e.g. GameEngine) can adjust player position
+      this.center.copy(center)
+      this.size.copy(size)
+      this.loaded = true
+
+      // Add a simple visible floor so we have something to stand on (in case the model doesn't include one)
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(Math.max(size.x, size.z) * 3 || 200, Math.max(size.x, size.z) * 3 || 200),
+        new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.2, roughness: 0.8 })
+      )
+      ground.rotation.x = -Math.PI / 2
+      ground.position.y = 0
+      ground.receiveShadow = true
+      this.mesh.add(ground)
+
+      // Add model to scene
       this.mesh.add(model)
 
       // Add simple static colliders approximated by mesh bounding boxes
@@ -198,28 +243,30 @@ export class Factory {
           const mesh = node as THREE.Mesh
           mesh.geometry.computeBoundingBox()
           const bbox = mesh.geometry.boundingBox!
-          const size = new THREE.Vector3()
-          bbox.getSize(size)
+          const localSize = new THREE.Vector3()
+          bbox.getSize(localSize)
 
-          // account for world scale
+          // account for world scale (including model scale)
           const worldScale = new THREE.Vector3()
           mesh.getWorldScale(worldScale)
-          size.multiply(worldScale)
+          localSize.multiply(worldScale)
 
-          if (size.x <= 0 || size.y <= 0 || size.z <= 0) return
+          if (localSize.x <= 0 || localSize.y <= 0 || localSize.z <= 0) return
 
-          const halfExtents = new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2)
-          const box = new CANNON.Box(halfExtents)
+          const halfExtents = new CANNON.Vec3(localSize.x / 2, localSize.y / 2, localSize.z / 2)
+          const boxShape = new CANNON.Box(halfExtents)
 
           const pos = new THREE.Vector3()
           mesh.getWorldPosition(pos)
 
           const body = new CANNON.Body({ mass: 0 })
-          body.addShape(box)
+          body.addShape(boxShape)
           body.position.set(pos.x, pos.y, pos.z)
           world.addBody(body)
         }
       })
+
+      console.log('Factory model loaded and colliders added; world bodies:', world.bodies.length)
     }, undefined, (err) => {
       console.error('Error loading factory model:', err)
     })

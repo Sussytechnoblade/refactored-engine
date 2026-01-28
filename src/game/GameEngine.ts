@@ -187,6 +187,18 @@ export class GameEngine {
       this.factory = new Factory(this.scene, this.world)
       this.scene.add(this.factory.mesh)
 
+      // If factory is not yet loaded, wait and reposition player to a sensible spawn near the map
+      if (this.factory.loaded) {
+        this.repositionPlayerToFactory()
+      } else {
+        const waitForFactory = setInterval(() => {
+          if (this.factory.loaded) {
+            clearInterval(waitForFactory)
+            this.repositionPlayerToFactory()
+          }
+        }, 100)
+      }
+
       // Create collectibles with lore
       this.createCollectibles()
 
@@ -197,6 +209,24 @@ export class GameEngine {
       this.gameLoop()
     } catch (e) {
       console.error('Error starting game:', e)
+    }
+  }
+
+  private repositionPlayerToFactory(): void {
+    try {
+      // Place the player near the factory center, a bit above the ground
+      const cx = this.factory.center.x || 0
+      const cz = this.factory.center.z || 0
+      const spawnY = Math.max(2, this.factory.size.y * 0.5 + 2)
+
+      this.player.body.position.set(cx, spawnY, cz)
+      this.player.mesh.position.copy(this.player.body.position as any)
+      this.camera.position.copy(this.player.mesh.position)
+      this.camera.position.y += 1.6
+
+      console.log('Player repositioned to factory center at', cx, spawnY, cz)
+    } catch (e) {
+      console.warn('Failed to reposition player to factory:', e)
     }
   }
 
